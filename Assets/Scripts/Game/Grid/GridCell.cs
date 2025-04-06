@@ -5,11 +5,29 @@ using UnityEngine.UI;
 public class GridCell : MonoBehaviour
 {
     public Image normalImage;
+    public Image hoverImage;
+    public Image activeImage;
+    public bool Selected {get;set;}
+    public int CellIndex{get;set;}
+    public bool SquareOccupied {get;set;}
     public List<Sprite> normalImages;
-
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        hoverImage.gameObject.SetActive(true);
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        hoverImage.gameObject.SetActive(true);
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+         hoverImage.gameObject.SetActive(false);
+    }
     void Start()
     {
-        
+        Selected = false;
+        SquareOccupied = false;
     }
     public void SetImage(bool setFirstImage)
     {

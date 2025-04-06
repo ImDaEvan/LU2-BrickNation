@@ -11,7 +11,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
 {
     public GameObject squareShapeImage;
     public Vector3 selectedScale;
-    public Vector2 offset = new Vector2(0f,400f);
+    public Vector2 offset = new Vector2(0f,1000f);
 
     [HideInInspector]
 
@@ -39,7 +39,9 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
 
         while(_currentShape.Count <= totalSquares) //instantiate all needed cells
         {
-            _currentShape.Add(Instantiate(squareShapeImage,transform) as GameObject);
+            GameObject addedShape = Instantiate(squareShapeImage,transform) as GameObject;
+            addedShape.name = shapeData.name;
+            _currentShape.Add(addedShape);
         }
         foreach(var square in _currentShape)
         {
@@ -76,7 +78,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     {
         float shiftOnY = 0f;
 
-        if (shapeData.rows>1)
+        if (shapeData.rows >= 1)
         {
             if (shapeData.rows % 2 != 0 )
             {
@@ -128,7 +130,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     {
         float shiftOnX = 0f;
 
-        if(shapeData.columns > 1)//vertical position calculate
+        if(shapeData.columns >= 1)
         {
             if(shapeData.columns % 2 != 0)//shape has a middle that we can place.
             {
@@ -216,11 +218,11 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         _transform.pivot = new Vector2(0,0);
         Vector2 pos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(_mainFrame.transform as RectTransform,eventData.position,Camera.main,out pos);
-        _transform.localPosition = pos-offset;
+        _transform.localPosition = pos+offset;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        
+        OnDrag(eventData);
     }
 }
