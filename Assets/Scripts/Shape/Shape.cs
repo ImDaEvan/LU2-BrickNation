@@ -6,18 +6,17 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Scripting.APIUpdating;
 
-public class ShapeDrawer : MonoBehaviour
+public class Shape : MonoBehaviour
 {
     public GameObject squareShapeImage;
 
-    //[HideInInspector]
+    [HideInInspector]
 
     public ShapeData CurrentShapeData;
 
     private List<GameObject> _currentShape = new List<GameObject>();
     void Start()
     {
-        RequestNewShape(CurrentShapeData);
     }
     public void RequestNewShape(ShapeData shapeData)
     {
