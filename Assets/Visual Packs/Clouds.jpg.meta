@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: affed1ccd3fc77e46bc9b3749af38ca3
+guid: 89b8a612e0209004dacc74c3889c6a21
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8917178049782271988
-    second: a-simple-blue-sky-4k-wallpaper-with-delicate-clouds-scattered-across-creating-a-calming-and-serene-atmosphere-wallpaper-for-apple-iphone-and-google-android-2025-top-wallpapers-07-03-2025-1741415233-hd-wallpaper_0
+      213: 2669142961033076756
+    second: Clouds_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: a-simple-blue-sky-4k-wallpaper-with-delicate-clouds-scattered-across-creating-a-calming-and-serene-atmosphere-wallpaper-for-apple-iphone-and-google-android-2025-top-wallpapers-07-03-2025-1741415233-hd-wallpaper_0
+      name: Clouds_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4ffce28e03e20cb70800000000000000
-      internalID: 8917178049782271988
+      spriteID: 4106c1f9163ba0520800000000000000
+      internalID: 2669142961033076756
       vertices: []
       indices: 
       edges: []

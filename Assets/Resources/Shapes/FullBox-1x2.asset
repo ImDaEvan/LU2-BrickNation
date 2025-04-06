@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 095cc5926220be14d90e3cd0468a5f51, type: 3}
-  m_Name: New Shape Data
+  m_Name: FullBox-1x2
   m_EditorClassIdentifier: 
-  columns: 0
-  rows: 0
+  columns: 1
+  rows: 2
   board:
-  - column: 
-  - column: 
-  - column: 
+  - column: 01
+  - column: 01

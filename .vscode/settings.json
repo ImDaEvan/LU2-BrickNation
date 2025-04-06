@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "LU2.sln"
+    "dotnet.defaultSolution": "LU2-BrickNation.sln"
 }
