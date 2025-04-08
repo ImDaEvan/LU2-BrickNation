@@ -93,7 +93,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         CurrentShapeData = shapeData;
         TotalCellsInShape = GetNumberOfCells(shapeData);
 
-        while(_currentShape.Count <= TotalCellsInShape) //instantiate all needed cells
+        while(_currentShape.Count < TotalCellsInShape) //instantiate all needed cells
         {
             GameObject addedShape = Instantiate(squareShapeImage,transform) as GameObject;
             addedShape.name = shapeData.name;
@@ -125,113 +125,120 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     }
     private Vector2 CalculatePosForCell(ShapeData shapeData, int column,int row, Vector2 moveDistance)
     {
-        Vector2 pos;
-        pos.x = CalculateXPositionForCell(shapeData,column,moveDistance);
-        pos.y = CalculateYPositionForCell(shapeData,row,moveDistance);
-        return pos;
+        // Vector2 pos;
+        // pos.x = CalculateXPositionForCell(shapeData,column,moveDistance);
+        // pos.y = CalculateYPositionForCell(shapeData,row,moveDistance);
+        // return pos;
+        float centerX = (shapeData.columns - 1) / 2f;
+        float centerY = (shapeData.rows - 1) / 2f;
+
+        float x = (column - centerX) * moveDistance.x;
+        float y = -(row - centerY) * moveDistance.y; // Flip Y for UI layout if needed
+
+        return new Vector2(x, y);
     }
-    private float CalculateYPositionForCell(ShapeData shapeData, int row, Vector2 moveDistance)
-    {
-        float shiftOnY = 0f;
+    // private float CalculateYPositionForCell(ShapeData shapeData, int row, Vector2 moveDistance)
+    // {
+    //     float shiftOnY = 0f;
 
-        if (shapeData.rows >= 1)
-        {
-            if (shapeData.rows % 2 != 0 )
-            {
-                var middleCellIndex = (shapeData.rows - 1) / 2;
-                var multiplier = (shapeData.rows - 1) / 2;
+    //     if (shapeData.rows >= 1)
+    //     {
+    //         if (shapeData.rows % 2 != 0 )
+    //         {
+    //             var middleCellIndex = (shapeData.rows - 1) / 2;
+    //             var multiplier = (shapeData.rows - 1) / 2;
 
-                if (row < middleCellIndex)
-                {
-                    shiftOnY = moveDistance.y;
-                    shiftOnY *= multiplier;
-                }
-                else if (row > middleCellIndex)
-                {
-                    shiftOnY = moveDistance.y * -1;
-                    shiftOnY *= multiplier;
-                }
+    //             if (row < middleCellIndex)
+    //             {
+    //                 shiftOnY = moveDistance.y;
+    //                 shiftOnY *= multiplier;
+    //             }
+    //             else if (row > middleCellIndex)
+    //             {
+    //                 shiftOnY = moveDistance.y * -1;
+    //                 shiftOnY *= multiplier;
+    //             }
 
-            }
-            else
-            {
-                var middleCellIndex1 =  (shapeData.rows ==2 ) ? 1 : (shapeData.rows / 2);
-                var middleCellIndex2 = (shapeData.rows ==2 ) ? 0 : (shapeData.rows - 1);
-                var multiplier = shapeData.rows / 2;
+    //         }
+    //         else
+    //         {
+    //             var middleCellIndex1 =  (shapeData.rows ==2 ) ? 1 : (shapeData.rows / 2);
+    //             var middleCellIndex2 = (shapeData.rows ==2 ) ? 0 : (shapeData.rows - 1);
+    //             var multiplier = shapeData.rows / 2;
 
-                if(row == middleCellIndex2)
-                {
-                    shiftOnY = moveDistance.y/2;
-                }
-                else if (row == middleCellIndex1)
-                {
-                    shiftOnY = (moveDistance.y / 2) * -1;
-                }
+    //             if(row == middleCellIndex2)
+    //             {
+    //                 shiftOnY = moveDistance.y/2;
+    //             }
+    //             else if (row == middleCellIndex1)
+    //             {
+    //                 shiftOnY = (moveDistance.y / 2) * -1;
+    //             }
                 
-                if( row < middleCellIndex1 && row < middleCellIndex2)
-                {
-                    shiftOnY = moveDistance.y;
-                    shiftOnY *= multiplier;
-                }
-                else if( row > middleCellIndex1 && row > middleCellIndex2)
-                {
-                    shiftOnY = moveDistance.y * -1;
-                    shiftOnY *= multiplier;
-                }
-            }
-        }
-        return shiftOnY;
-    }
-    private float CalculateXPositionForCell(ShapeData shapeData, int column, Vector2 moveDistance)
-    {
-        float shiftOnX = 0f;
+    //             if( row < middleCellIndex1 && row < middleCellIndex2)
+    //             {
+    //                 shiftOnY = moveDistance.y;
+    //                 shiftOnY *= multiplier;
+    //             }
+    //             else if( row > middleCellIndex1 && row > middleCellIndex2)
+    //             {
+    //                 shiftOnY = moveDistance.y * -1;
+    //                 shiftOnY *= multiplier;
+    //             }
+    //         }
+    //     }
+    //     return shiftOnY;
+    // }
+    // private float CalculateXPositionForCell(ShapeData shapeData, int column, Vector2 moveDistance)
+    // {
+    //     float shiftOnX = 0f;
 
-        if(shapeData.columns >= 1)
-        {
-            if(shapeData.columns % 2 != 0)//shape has a middle that we can place.
-            {
-                var middleCellIndex = (shapeData.columns - 1) / 2;
-                var multiplier = (shapeData.columns - 1) / 2;
-                if( column < middleCellIndex)
-                {
-                    shiftOnX = moveDistance.x * -1;
-                    shiftOnX *= multiplier;
-                }
-                else if( column > middleCellIndex)
-                {
-                    shiftOnX = moveDistance.x;
-                    shiftOnX *= multiplier;
-                }
-            }
-            else 
-            {
-                var middleCellIndex1 =  (shapeData.columns ==2 ) ? 1 : (shapeData.columns / 2);
-                var middleCellIndex2 = (shapeData.columns ==2 ) ? 0 : (shapeData.columns - 1);
-                var multiplier = shapeData.columns / 2;
+    //     if(shapeData.columns >= 1)
+    //     {
+    //         if(shapeData.columns % 2 != 0)//shape has a middle that we can place.
+    //         {
+    //             var middleCellIndex = (shapeData.columns - 1) / 2;
+    //             var multiplier = (shapeData.columns - 1) / 2;
+    //             if( column < middleCellIndex)
+    //             {
+    //                 shiftOnX = moveDistance.x * -1;
+    //                 shiftOnX *= multiplier;
+    //             }
+    //             else if( column > middleCellIndex)
+    //             {
+    //                 shiftOnX = moveDistance.x;
+    //                 shiftOnX *= multiplier;
+    //             }
+    //         }
+    //         else 
+    //         {
+    //             var middleCellIndex1 =  (shapeData.columns ==2 ) ? 1 : (shapeData.columns / 2);
+    //             var middleCellIndex2 = (shapeData.columns ==2 ) ? 0 : (shapeData.columns - 1);
+    //             var multiplier = shapeData.columns / 2;
 
-                if(column == middleCellIndex2)
-                {
-                    shiftOnX = moveDistance.x/2;
-                }
-                else if (column == middleCellIndex1)
-                {
-                    shiftOnX = (moveDistance.x / 2) * -1;
-                }
+    //             if(column == middleCellIndex2)
+    //             {
+    //                 shiftOnX = moveDistance.x/2;
+    //             }
+    //             else if (column == middleCellIndex1)
+    //             {
+    //                 shiftOnX = (moveDistance.x / 2) * -1;
+    //             }
 
-                if( column < middleCellIndex1 && column < middleCellIndex2)
-                {
-                    shiftOnX = moveDistance.x * -1;
-                    shiftOnX *= multiplier;
-                }
-                else if( column > middleCellIndex1 && column > middleCellIndex2)
-                {
-                    shiftOnX = moveDistance.x;
-                    shiftOnX *= multiplier;
-                }
-            }
-        }
-        return shiftOnX;
-    }
+    //             if( column < middleCellIndex1 && column < middleCellIndex2)
+    //             {
+    //                 shiftOnX = moveDistance.x * -1;
+    //                 shiftOnX *= multiplier;
+    //             }
+    //             else if( column > middleCellIndex1 && column > middleCellIndex2)
+    //             {
+    //                 shiftOnX = moveDistance.x;
+    //                 shiftOnX *= multiplier;
+    //             }
+    //         }
+    //     }
+    //     return shiftOnX;
+    // }
 
     private int GetNumberOfCells(ShapeData shapeData)
     {
