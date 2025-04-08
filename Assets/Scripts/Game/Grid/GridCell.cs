@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,10 @@ public class GridCell : MonoBehaviour
             Selected = true;
             hoverImage.gameObject.SetActive(true);
         }
+        else if(collision.GetComponent<ShapeSquare>() != null)
+        {
+            collision.GetComponent<ShapeSquare>().SetOccupied();
+        }
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -29,6 +34,10 @@ public class GridCell : MonoBehaviour
         {
             hoverImage.gameObject.SetActive(true);
         }
+        else if(collision.GetComponent<ShapeSquare>() != null)
+        {
+            collision.GetComponent<ShapeSquare>().SetOccupied();
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -37,6 +46,10 @@ public class GridCell : MonoBehaviour
             Selected = false;
             hoverImage.gameObject.SetActive(false);
         }    
+        else if(collision.GetComponent<ShapeSquare>() != null)
+        {
+            collision.GetComponent<ShapeSquare>().UnsetOccupied();
+        }
     }
     void Start()
     {
