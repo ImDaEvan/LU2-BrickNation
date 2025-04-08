@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Models;
 using NUnit.Framework.Constraints;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -14,12 +16,24 @@ public class Grid : MonoBehaviour
     public Vector2 startPosition = new Vector2(0.0f,0.0f);
     public float cellScale = 0.5f;
     public float everyCellOffset = 0.0f;
+    
+    public GameSettings settings = new GameSettings()
+    {
+        scorePerLine = 10,
+        scoreMultiplier2Lines=2f,
+        scoreMultiplier3Lines=10f,
+        initialComboMultiplier=1.1f,
+        comboProgression=5.5f,
+        comboDeter = 4
+    };
+
 
     private Vector2 _offset = new Vector2(0.0f,0.0f);
     private List<GameObject> _gridCells = new List<GameObject>();
     private LineDetector _lineDetector;
     private int moveCount = 0;
-
+    private int comboCount = 0;
+    private int lastMoveClear = -2;
 
     void Start()
     {
@@ -157,8 +171,7 @@ public class Grid : MonoBehaviour
             {
                 GameEvents.DiminishShapeControls();
             }
-             moveCount++;
-            CheckClearableLines();
+            CheckClearableCombinations();
         }
         else
         {
@@ -167,8 +180,9 @@ public class Grid : MonoBehaviour
        
     }
 
-    private void CheckClearableLines()
+    private void CheckClearableCombinations()
     {
+        moveCount++;
         List<int[]> lines = new List<int[]>();
         
         //add columns to lines List
@@ -181,17 +195,44 @@ public class Grid : MonoBehaviour
         {
             lines.Add(_lineDetector.GetHorizontalLine(row));
         }
+        for (var square = 0; square<9;square++)
+        {
+           int[] data = new int[9];
+            for(var index=0; index<9;index++)
+            {
+                data[index]= _lineDetector.square_data[square,index];
+            }
+            lines.Add(data);
+        }
 
         var completedLines = CheckClearableSquares(lines);
         
-        int scoreToAdd = 0;
+        float scoreToAdd = 0;
 
-        if (completedLines>=2)
+        Debug.Log(completedLines);
+        if (completedLines>=1)
         {
-
+            scoreToAdd = completedLines*settings.scorePerLine;
+            scoreToAdd *= settings.initialComboMultiplier + (float)Math.Pow(comboCount, 0.5);
+            if (moveCount-lastMoveClear<=settings.comboDeter)
+            {
+                comboCount += completedLines;
+            }
+            else
+            {
+                comboCount=completedLines-1;
+            }
+            lastMoveClear = moveCount;
         }
-
+        else if (moveCount - lastMoveClear > settings.comboDeter)
+        {
+            comboCount = 0;
+        }
+        int add = Mathf.RoundToInt(scoreToAdd);
+        GameEvents.AddScore(add);
+        GameEvents.UpdateCombo(comboCount);
     }
+    
     private int CheckClearableSquares(List<int[]> data)
     {
         List<int[]> completedLines = new List<int[]>();
