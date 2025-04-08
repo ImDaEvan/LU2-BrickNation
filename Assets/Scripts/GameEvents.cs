@@ -2,7 +2,10 @@ using UnityEngine;
 using System;
 public class GameEvents : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    //methods that can be subscribed and unsubscribed to.
     public static Action CanPlaceShape;
     public static Action MoveShapeToStartPosition;
+    public static Action RequestNewShapes;
+    public static Action DiminishShapeControls;
+
 }

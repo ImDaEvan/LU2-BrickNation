@@ -38,11 +38,13 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     private void OnEnable()
     {
         GameEvents.MoveShapeToStartPosition += MoveShapeToStartPosition;
+        GameEvents.DiminishShapeControls += DiminishShapeControls;
     }
 
     private void OnDisable()
     {
         GameEvents.MoveShapeToStartPosition -= MoveShapeToStartPosition;
+        GameEvents.DiminishShapeControls -= DiminishShapeControls;
     }
     public bool IsOnStartPos()
     {
@@ -58,6 +60,16 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
             }
         }
         return false;
+    }
+    private void DiminishShapeControls()
+    {
+        if (IsOnStartPos() == false && IsAnyShapeCellActive())
+        {
+            foreach(var cell in _currentShape)
+            {
+                cell.gameObject.SetActive(false);
+            }
+        }
     }
     public void DeactivateShape()
     {

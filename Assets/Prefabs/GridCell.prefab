@@ -282,8 +282,8 @@ MonoBehaviour:
   hoverImage: {fileID: 4900751554582332734}
   activeImage: {fileID: 8754400304005658006}
   normalImages:
-  - {fileID: 5403489869266943525, guid: 3cc0c077bce97c54f8051968169e5159, type: 3}
   - {fileID: 2882304021453889654, guid: 82dc41599912e44448162110889cf579, type: 3}
+  - {fileID: 2882304021453889654, guid: 6eca5454886c90841a1fdc60b9194e2a, type: 3}
 --- !u!61 &2750444511247373255
 BoxCollider2D:
   m_ObjectHideFlags: 0

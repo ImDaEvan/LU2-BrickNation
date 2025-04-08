@@ -133,7 +133,24 @@ public class NewMonoBehaviourScript : MonoBehaviour
             {
                 _gridCells[cellIndex].GetComponent<GridCell>().PlaceShapeOnBoard();
             }
-            currentSelectedShape.DeactivateShape();
+
+            var shapesLeft = 0;
+
+            foreach (Shape shape in shapeStorage.shapeList)
+            {
+                if (shape.IsOnStartPos() && shape.IsAnyShapeCellActive())
+                {
+                    shapesLeft++;
+                }
+            }
+            if (shapesLeft == 0)
+            {
+                GameEvents.RequestNewShapes();
+            }
+            else
+            {
+                GameEvents.DiminishShapeControls();
+            }
         }
         else
         {
