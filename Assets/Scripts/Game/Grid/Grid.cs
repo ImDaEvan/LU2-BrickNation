@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class NewMonoBehaviourScript : MonoBehaviour
 {
+    public ShapeStorage shapeStorage;
     public int columns = 9;
     public int rows = 9;
     public float cellGap = 0.9f;
@@ -52,6 +54,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
                 _gridCells[_gridCells.Count-1].transform.localScale = new Vector3(cellScale,cellScale,cellScale);
 
                 _gridCells[_gridCells.Count-1].GetComponent<GridCell>().SetImage(cellIndex % 2 ==0);
+                _gridCells[_gridCells.Count-1].GetComponent<GridCell>().CellIndex = cellIndex;
                 cellIndex++;
 
             }
@@ -111,13 +114,31 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     private void CanPlaceShape()
     {
+        var cellIndexes = new List<int>();
         foreach (var cell in _gridCells)
         {
             var gridCell = cell.GetComponent<GridCell>();
-            if (gridCell.CanUseCell())
+            if (gridCell.Selected && !gridCell.CellOccupied)
             {
-                gridCell.ActivateCell();
+                cellIndexes.Add(gridCell.CellIndex);
+                gridCell.Selected = false;
             }
         }
+        var currentSelectedShape = shapeStorage.GetCurrentSelectedShape();
+        if (currentSelectedShape == null) return;
+        
+        if(currentSelectedShape.TotalCellsInShape == cellIndexes.Count)
+        {
+            foreach ( var cellIndex in cellIndexes)
+            {
+                _gridCells[cellIndex].GetComponent<GridCell>().PlaceShapeOnBoard();
+            }
+            currentSelectedShape.DeactivateShape();
+        }
+        else
+        {
+            GameEvents.MoveShapeToStartPosition();
+        }
+       
     }
 }

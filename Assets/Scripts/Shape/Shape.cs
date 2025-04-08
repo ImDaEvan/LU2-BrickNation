@@ -17,27 +17,83 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
 
     public ShapeData CurrentShapeData;
 
+    public int TotalCellsInShape {get;set;}
+
     private List<GameObject> _currentShape = new List<GameObject>();
     private Vector3 _shapeStartScale;
     private RectTransform _transform;
     private bool _shapeDraggable = true;
     private Canvas _mainFrame;
+    private Vector3 _startPosition;
+    private bool _shapeActive = true;
     public void Awake()
     {
         _shapeStartScale = this.GetComponent<RectTransform>().localScale;
         _transform = this.GetComponent<RectTransform>();
         _mainFrame = GetComponentInParent<Canvas>();
+        _shapeDraggable = true;
+        _startPosition = _transform.localPosition;
+        _shapeActive = true;
+    }
+    private void OnEnable()
+    {
+        GameEvents.MoveShapeToStartPosition += MoveShapeToStartPosition;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.MoveShapeToStartPosition -= MoveShapeToStartPosition;
+    }
+    public bool IsOnStartPos()
+    {
+        return (_transform.localPosition == _startPosition);
+    }
+    public bool IsAnyShapeCellActive()
+    {
+        foreach (var cell in _currentShape)
+        {
+            if(cell.gameObject.activeSelf)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public void DeactivateShape()
+    {
+        if (_shapeActive)
+        {
+            foreach (var cell in _currentShape)
+            {
+                cell?.GetComponent<ShapeSquare>().DeactivateCell();
+            }
+        }
+
+        _shapeActive = false;
+    }
+    public void ActivateShape()
+    {
+        if (!_shapeActive)
+        {
+            foreach (var cell in _currentShape)
+            {
+                cell?.GetComponent<ShapeSquare>().ActivateCell();
+            }
+        }
+        
+        _shapeActive = true;
     }
     public void RequestNewShape(ShapeData shapeData)
     {
+        _transform.localPosition = _startPosition;
         CreateShape(shapeData);
     }
     public void CreateShape(ShapeData shapeData)
     {
         CurrentShapeData = shapeData;
-        var totalSquares = GetNumberOfCells(shapeData);
+        TotalCellsInShape = GetNumberOfCells(shapeData);
 
-        while(_currentShape.Count <= totalSquares) //instantiate all needed cells
+        while(_currentShape.Count <= TotalCellsInShape) //instantiate all needed cells
         {
             GameObject addedShape = Instantiate(squareShapeImage,transform) as GameObject;
             addedShape.name = shapeData.name;
@@ -225,5 +281,9 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     public void OnPointerDown(PointerEventData eventData)
     {
         OnDrag(eventData);
+    }
+    private void MoveShapeToStartPosition()
+    {
+        _transform.transform.localPosition = _startPosition;
     }
 }
