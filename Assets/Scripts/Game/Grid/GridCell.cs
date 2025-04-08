@@ -9,7 +9,7 @@ public class GridCell : MonoBehaviour
     public Image activeImage;
     public bool Selected {get;set;}
     public int CellIndex{get;set;}
-    public bool SquareOccupied {get;set;}
+    public bool CellOccupied {get;set;}
     public List<Sprite> normalImages;
     
     private void OnTriggerEnter2D(Collider2D collision)
@@ -27,7 +27,18 @@ public class GridCell : MonoBehaviour
     void Start()
     {
         Selected = false;
-        SquareOccupied = false;
+        CellOccupied = false;
+    }
+    public bool CanUseCell()
+    {
+        return hoverImage.gameObject.activeSelf;
+    }
+    public void ActivateCell()
+    {
+        hoverImage.gameObject.SetActive(false);
+        activeImage.gameObject.SetActive(true);
+        Selected = true;
+        CellOccupied = true;
     }
     public void SetImage(bool setFirstImage)
     {

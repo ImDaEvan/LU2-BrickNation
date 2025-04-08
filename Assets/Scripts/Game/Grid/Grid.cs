@@ -22,6 +22,15 @@ public class NewMonoBehaviourScript : MonoBehaviour
     {
         CreateGrid();
     }
+
+    private void OnEnable()
+    {
+        GameEvents.CanPlaceShape += CanPlaceShape;
+    }
+    private void OnDisable()
+    {
+         GameEvents.CanPlaceShape -= CanPlaceShape;
+    }
     private void CreateGrid()
     {
         SpawnGridCells();
@@ -98,5 +107,17 @@ public class NewMonoBehaviourScript : MonoBehaviour
         }
         
 
+    }
+
+    private void CanPlaceShape()
+    {
+        foreach (var cell in _gridCells)
+        {
+            var gridCell = cell.GetComponent<GridCell>();
+            if (gridCell.CanUseCell())
+            {
+                gridCell.ActivateCell();
+            }
+        }
     }
 }

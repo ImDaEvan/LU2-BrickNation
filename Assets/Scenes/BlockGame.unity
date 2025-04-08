@@ -1106,6 +1106,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shape
       objectReference: {fileID: 0}
+    - target: {fileID: 7543023618174172868, guid: 7c8833965f8b4954aae92fc55d07d557, type: 3}
+      propertyPath: selectedScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7543023618174172868, guid: 7c8833965f8b4954aae92fc55d07d557, type: 3}
+      propertyPath: selectedScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7543023618174172868, guid: 7c8833965f8b4954aae92fc55d07d557, type: 3}
+      propertyPath: selectedScale.z
+      value: 0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
