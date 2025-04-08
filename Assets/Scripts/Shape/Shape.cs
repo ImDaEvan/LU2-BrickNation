@@ -26,6 +26,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     private Canvas _mainFrame;
     private Vector3 _startPosition;
     private bool _shapeActive = true;
+   
     public void Awake()
     {
         _shapeStartScale = this.GetComponent<RectTransform>().localScale;

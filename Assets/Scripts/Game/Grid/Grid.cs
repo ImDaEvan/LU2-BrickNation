@@ -4,7 +4,7 @@ using NUnit.Framework.Constraints;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class Grid : MonoBehaviour
 {
     public ShapeStorage shapeStorage;
     public int columns = 9;
@@ -17,14 +17,20 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     private Vector2 _offset = new Vector2(0.0f,0.0f);
     private List<GameObject> _gridCells = new List<GameObject>();
-
+    private LineDetector _lineDetector;
+    private int moveCount = 0;
 
 
     void Start()
     {
+        _lineDetector = GetComponent<LineDetector>();
         CreateGrid();
     }
-
+    public Models.GridSize GetGridSize()
+    {
+        Models.GridSize gridSize = new Models.GridSize(columns,rows);
+        return gridSize;
+    }
     private void OnEnable()
     {
         GameEvents.CanPlaceShape += CanPlaceShape;
@@ -53,7 +59,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
                 _gridCells[_gridCells.Count-1].transform.localScale = new Vector3(cellScale,cellScale,cellScale);
 
-                _gridCells[_gridCells.Count-1].GetComponent<GridCell>().SetImage(cellIndex % 2 ==0);
+                _gridCells[_gridCells.Count-1].GetComponent<GridCell>().SetImage(_lineDetector.GetGridSquareIndex(cellIndex) % 2 ==0);
                 _gridCells[_gridCells.Count-1].GetComponent<GridCell>().CellIndex = cellIndex;
                 cellIndex++;
 
@@ -132,6 +138,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
             foreach ( var cellIndex in cellIndexes)
             {
                 _gridCells[cellIndex].GetComponent<GridCell>().PlaceShapeOnBoard();
+                moveCount++;
             }
 
             var shapesLeft = 0;
@@ -158,4 +165,5 @@ public class NewMonoBehaviourScript : MonoBehaviour
         }
        
     }
+   
 }
