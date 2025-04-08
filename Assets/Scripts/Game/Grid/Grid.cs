@@ -138,9 +138,8 @@ public class Grid : MonoBehaviour
             foreach ( var cellIndex in cellIndexes)
             {
                 _gridCells[cellIndex].GetComponent<GridCell>().PlaceShapeOnBoard();
-                moveCount++;
             }
-
+           
             var shapesLeft = 0;
 
             foreach (Shape shape in shapeStorage.shapeList)
@@ -158,6 +157,8 @@ public class Grid : MonoBehaviour
             {
                 GameEvents.DiminishShapeControls();
             }
+             moveCount++;
+            CheckClearableLines();
         }
         else
         {
@@ -165,5 +166,73 @@ public class Grid : MonoBehaviour
         }
        
     }
-   
+
+    private void CheckClearableLines()
+    {
+        List<int[]> lines = new List<int[]>();
+        
+        //add columns to lines List
+        foreach (var column in _lineDetector.columnIndexes)
+        {
+            lines.Add(_lineDetector.GetVerticalLine(column));
+        }
+        //add rows to lines List
+        for (var row = 0; row<9;row++)
+        {
+            lines.Add(_lineDetector.GetHorizontalLine(row));
+        }
+
+        var completedLines = CheckClearableSquares(lines);
+        
+        int scoreToAdd = 0;
+
+        if (completedLines>=2)
+        {
+
+        }
+
+    }
+    private int CheckClearableSquares(List<int[]> data)
+    {
+        List<int[]> completedLines = new List<int[]>();
+
+        int linesCompleted = 0;
+        foreach (var line in data)
+        {
+            var lineCompleted = true;
+            foreach ( var squareIndex in line)
+            {
+                var comp = _gridCells[squareIndex].GetComponent<GridCell>();
+                if (comp.CellOccupied == false)
+                {
+                    lineCompleted = false;
+                }
+            }
+            if (lineCompleted)
+            {
+                completedLines.Add(line);
+            }
+        }
+        foreach(var line in completedLines)
+        {
+            var lineCompleted = false;
+            foreach (var index in line)
+            {
+                var comp = _gridCells[index].GetComponent<GridCell>();
+                comp.DeactivateCell();
+                lineCompleted = true;
+            }
+            foreach (var index in line)
+            {
+                var comp = _gridCells[index].GetComponent<GridCell>();
+                comp.ClearCell();
+                lineCompleted = true;
+            }
+            if (lineCompleted) 
+            {
+                linesCompleted++;
+            }
+        }
+        return linesCompleted;
+    }
 }

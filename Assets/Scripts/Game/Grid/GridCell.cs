@@ -67,6 +67,16 @@ public class GridCell : MonoBehaviour
         Selected = true;
         CellOccupied = true;
     }
+    public void DeactivateCell()
+    {
+        activeImage.gameObject.SetActive(false);
+    }
+    public void ClearCell()
+    {
+        Selected = false;
+        CellOccupied = false;
+        
+    }
     public void SetImage(bool setFirstImage)
     {
         normalImage.GetComponent<Image>().sprite = setFirstImage ? normalImages[1] : normalImages[0];

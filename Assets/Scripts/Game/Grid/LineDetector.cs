@@ -1,3 +1,4 @@
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 public class LineDetector : MonoBehaviour
 {
@@ -29,6 +30,50 @@ public class LineDetector : MonoBehaviour
         {57,58,59,66,67,68, 75,76,77 },
         {60,61,62,69,70,71,78,79,80},
     };
+    [HideInInspector]
+    public int[] columnIndexes = new int[9]
+    {
+        0,1,2,3,4,5,6,7,8,
+    };
+
+    private (int, int) GetCellPosition(int index)
+    {
+        int pos_row = -1;
+        int pos_col = -1;
+
+        for (int row = 0; row<9;row++)
+        {
+             for (int col = 0; col<9;col++)
+            {
+                if (line_data[row,col] == index)
+                {
+                    pos_row = row;
+                    pos_col = col;
+                }
+            }
+        }
+        return (pos_row,pos_col);
+    }
+    public int[] GetVerticalLine(int column)
+    {
+        int[] line = new int[9];
+        int cellPosCol = GetCellPosition(column).Item2;
+        for (column = 0; column<9; column++)
+        {
+            line[column] = line_data[column,cellPosCol];
+        }
+        return line;
+    }
+    public int[] GetHorizontalLine(int row)
+    {
+        int[] line = new int[9];
+        for (var index = 0; index < 9; index++)
+        {
+            line[index] = line_data[row, index];
+        }
+        return line;
+    }
+
     public int GetGridSquareIndex(int square)
     {
         for (int row = 0; row<9; row++)
