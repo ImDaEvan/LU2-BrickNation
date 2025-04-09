@@ -14,6 +14,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BlockGame.unity
     guid: 2f62cf58245d1fe498b36c618f83054e
+  - enabled: 1
+    path: Assets/Scenes/TrophyRoom.unity
+    guid: cbd6de531a7567042a9ed791c510b6bd
+  - enabled: 1
+    path: Assets/Scenes/Login.unity
+    guid: 4c7f69bc51bbe7b42a5a746525f3d16a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   m_UseUCBPForAssetBundles: 0

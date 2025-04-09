@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Models;
 using NUnit.Framework.Constraints;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.NCalc;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class Grid : MonoBehaviour
+public class GridGenerator : MonoBehaviour
 {
     public ShapeStorage shapeStorage;
     public int columns = 9;
@@ -209,7 +214,6 @@ public class Grid : MonoBehaviour
         
         float scoreToAdd = 0;
 
-        Debug.Log(completedLines);
         if (completedLines>=1)
         {
             scoreToAdd = completedLines*settings.scorePerLine;
@@ -223,6 +227,7 @@ public class Grid : MonoBehaviour
                 comboCount=completedLines-1;
             }
             lastMoveClear = moveCount;
+            UnityEngine.Debug.Log(scoreToAdd);
         }
         else if (moveCount - lastMoveClear > settings.comboDeter)
         {
@@ -231,6 +236,7 @@ public class Grid : MonoBehaviour
         int add = Mathf.RoundToInt(scoreToAdd);
         GameEvents.AddScore(add);
         GameEvents.UpdateCombo(comboCount);
+        CheckPlayerLost();
     }
     
     private int CheckClearableSquares(List<int[]> data)
@@ -275,5 +281,102 @@ public class Grid : MonoBehaviour
             }
         }
         return linesCompleted;
+    }
+    private void CheckPlayerLost()
+    {
+        var validShapes = 0;
+        for (var index = 0; index < shapeStorage.shapeList.Count;index++)
+        {
+            var isShapeActive = shapeStorage.shapeList[index].IsAnyShapeCellActive();
+            if(CheckShapePlaceability(shapeStorage.shapeList[index]) && isShapeActive)
+            {
+                shapeStorage.shapeList[index]?.ActivateShape();
+                validShapes++;
+            }
+
+        }
+        if (validShapes == 0)
+        {
+            GameEvents.GameOver(false);
+            UnityEngine.Debug.Log("Game Over.");
+        }
+    }
+    private bool CheckShapePlaceability(Shape shape)
+    {
+        var currentShapeData = shape.CurrentShapeData;
+        var shapeColumns = currentShapeData.columns;
+        var shapeRows = currentShapeData.rows;
+        List<int> filledSquares = new List<int>();
+        var squareIndex = 0;
+        for (int rowIndex=0;rowIndex<shapeRows;rowIndex++)
+        {
+            for (int columnIndex=0;columnIndex<shapeColumns;columnIndex++)
+            {
+                if (currentShapeData.board[rowIndex].column[columnIndex])
+                {
+                    filledSquares.Add(squareIndex);
+                }
+                squareIndex++;
+            }
+        }
+        if (shape.TotalCellsInShape != filledSquares.Count)
+        {
+
+        }
+        var squareList = GetAllSquareCombinations(shapeColumns,shapeRows);
+
+        bool canBePlaced = false;
+        foreach (var num in squareList )
+        {
+            bool shapeCanbePlaced = true;
+            foreach(var squareIndexCheck in filledSquares)
+            {
+                var comp = _gridCells[num[squareIndexCheck]].GetComponent<GridCell>();
+                if (comp.CellOccupied)
+                {
+                    shapeCanbePlaced = false;
+                }
+            }
+            if (shapeCanbePlaced)
+            {
+                canBePlaced = true;
+            }
+        }
+        return canBePlaced;
+
+    }
+    private List<int[]> GetAllSquareCombinations(int columns,int rows)
+    {
+        var squareList= new List<int[]>();
+        var lastColumnIndex = 0;
+        var lastRowIndex = 0;
+        
+        int safeIndex = 0;
+
+        while(lastRowIndex + (rows-1) < 9)
+        {
+            Task.Delay(500);
+            var rowData = new List<int>();
+            for (var row=lastRowIndex;row < lastRowIndex + rows; row++ )
+            {
+                for (var column=lastColumnIndex;column < lastColumnIndex + columns; column++ )
+                {
+                    rowData.Add(_lineDetector.line_data[row,column]);
+                }
+            }
+            squareList.Add(rowData.ToArray());
+            lastColumnIndex++;
+            if (lastColumnIndex + (columns-1) >= 9)
+            {
+                lastRowIndex++;
+                lastColumnIndex = 0;
+            }
+            safeIndex++;
+            if (safeIndex > 100)
+            {
+                break;
+            }
+        }   
+        return squareList;
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -111,6 +112,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
             GameObject addedShape = Instantiate(squareShapeImage,transform) as GameObject;
             addedShape.name = shapeData.name;
             _currentShape.Add(addedShape);
+            Task.Delay(100);
         }
         foreach(var square in _currentShape)
         {
