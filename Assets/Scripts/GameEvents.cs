@@ -9,7 +9,7 @@ public class GameEvents : MonoBehaviour
     public static Action MoveShapeToStartPosition;
     public static Action RequestNewShapes;
     public static Action DiminishShapeControls;
-
+    public static Action<bool> GameOver;
 
 
 }
